@@ -2,7 +2,6 @@
 
 {% block body %}
   <form action="/signup" method="post" enctype="multipart/form-data">
-    {% include "_partials/flash.njk" %}
 
     <label for="avatar">
       <img src="/images/avatar.svg" height="24"/>
@@ -27,6 +26,7 @@
   <script type="text/javascript">
     var avatarInput = document.getElementById('avatar')
     var img = document.querySelector('label[for=avatar] img')
+
     avatarInput.onchange = function (e) {
       img
         .classList

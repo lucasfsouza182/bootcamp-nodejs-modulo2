@@ -6,6 +6,7 @@ class UserController {
   }
 
   async store (req, res) {
+    console.log(req.body)
     await User.create(req.body)
 
     return res.redirect('/')
