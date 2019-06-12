@@ -1,4 +1,5 @@
 const express = require('express')
+const session = require('express-session')
 const nunjucks = require('nunjucks')
 const path = require('path')
 
