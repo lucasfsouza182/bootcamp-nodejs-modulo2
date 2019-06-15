@@ -3,6 +3,8 @@ const session = require('express-session')
 const LokiStore = require('connect-loki')(session)
 const nunjucks = require('nunjucks')
 const path = require('path')
+const flash = require('connect-flash')
+const dateFilter = require('nunjucks-date-filter')
 
 class App {
   constructor () {
@@ -16,25 +18,28 @@ class App {
 
   middlewares () {
     this.express.use(express.urlencoded({ extended: false }))
+    this.express.use(flash())
     this.express.use(
       session({
-        name: 'root',
-        secret: 'MyAppSecret',
-        resave: false,
         store: new LokiStore({
-          path: path.resolve(__dirname, '..', 'tmp', 'sessions')
+          path: path.resolve(__dirname, '..', 'tmp', 'sessions.db')
         }),
+        secret: 'MyAppSecret',
+        resave: true,
         saveUninitialized: true
       })
     )
   }
 
   views () {
-    nunjucks.configure(path.resolve(__dirname, 'app', 'views'), {
+    const env = nunjucks.configure(path.resolve(__dirname, 'app', 'views'), {
       watch: this.isDev,
       express: this.express,
       autoescape: true
     })
+
+    env.addFilter('date', dateFilter)
+
     this.express.use(express.static(path.resolve(__dirname, 'public')))
     this.express.set('view engine', 'njk')
   }
